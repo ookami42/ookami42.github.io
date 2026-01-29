@@ -23,7 +23,7 @@ Este método de instalação do LuaTools é muito parecido com o **Easy Method**
 - Instalação **automática de tudo de uma vez**
 
 ## Atenção ⚠️
-O script original foi criado por <@1315818201480822875> e modificado por <@1397265639344832674> para funcionar corretamente.
+O script original foi criado por MELLY e modificado por YUKI para funcionar corretamente.
 
 ## Como usar ⁉️
 - Abra o **PowerShell como Administrador**
