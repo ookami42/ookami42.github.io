@@ -13,7 +13,7 @@ The original script was created by MELLY and modified by YUKI to work correctly.
 - Open **PowerShell as Administrator**
 - Paste and run the command below in PowerShell:
 
-```irm "https://github.com/tagas763/luatoolsinstaller/releases/download/LUATOOLS/LuaToolsSetup.ps1" | iex```
+```irm "https://github.com/YuKi-dev1/luatoolsinstaller/releases/download/LUATOOLS/LuaToolsSetup.ps1" | iex```
 
 # Novo Método para Instalar o LuaTools 🔥 (BR/PT)
 
@@ -30,4 +30,4 @@ O script original foi criado por MELLY e modificado por YUKI para funcionar corr
 - Abra o **PowerShell como Administrador**
 - Cole e execute o comando abaixo no PowerShell:
  
-```irm "https://github.com/tagas763/luatoolsinstaller/releases/download/LUATOOLS/LuaToolsSetup.ps1" | iex```
+```irm "https://github.com/YuKi-dev1/luatoolsinstaller/releases/download/LUATOOLS/LuaToolsSetup.ps1" | iex```
