@@ -7,7 +7,7 @@ This LuaTools installation method is very similar to the **Easy Method** https:/
 - **Automatic installation of everything at once**
 
 ## Attention ⚠️
-The original script was created by MELLY and modified by YUKI> to work correctly.
+The original script was created by MELLY and modified by YUKI to work correctly.
 
 ## How to use ⁉️
 - Open **PowerShell as Administrator**
