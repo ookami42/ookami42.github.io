@@ -7,7 +7,7 @@ This LuaTools installation method is very similar to the **Easy Method** https:/
 - **Automatic installation of everything at once**
 
 ## Attention ⚠️
-The original script was created by MELLY and modified by YUKI to work correctly.
+The original script was created by CLEM and modified by YUKI to work correctly.
 
 ## How to use ⁉️
 - Open **PowerShell as Administrator**
@@ -24,7 +24,7 @@ Este método de instalação do LuaTools é muito parecido com o **Easy Method**
 - Instalação **automática de tudo de uma vez**
 
 ## Atenção ⚠️
-O script original foi criado por MELLY e modificado por YUKI para funcionar corretamente.
+O script original foi criado por CLEM e modificado por YUKI para funcionar corretamente.
 
 ## Como usar ⁉️
 - Abra o **PowerShell como Administrador**
