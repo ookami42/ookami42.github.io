@@ -1,0 +1,21 @@
+name: Release single file
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Release with single asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: easy-setup.ps1
