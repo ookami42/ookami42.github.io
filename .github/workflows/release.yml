@@ -15,10 +15,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Prepare release asset
+        run: |
+          cp LuaToolsSetup.ps1 lua.ps1
+          ls -la lua.ps1
+
       - name: Create Release with single asset
         uses: softprops/action-gh-release@v2
         with:
-          files: easy-setup.ps1
+          files: lua.ps1
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
