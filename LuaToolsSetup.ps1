@@ -72,6 +72,7 @@ $T = @{
         Exclusion          = "ADDING AN EXCLUSION TO THE FOLDER C:\Program Files (x86)\Steam"
         WAITFEWSECONDS     = "Please wait a few seconds for Steam to fully load."
         exclusion_in_pc    = "Exclusion already exists"
+        millenium          = "Millenium issues."
     }
     BR = @{
         STEAMTOOLS_OK      = "Steamtools ja esta instalado"
@@ -94,6 +95,7 @@ $T = @{
         Exclusion          = "ADICIONANDO UMA EXCLUSÃO NA PASTA C:\Program Files (x86)\Steam"
         WAITFEWSECONDS     = "Aguarde uns segundos ate a Steam abrir completamente"
         exclusion_in_pc    = "Exclusao ja existe"
+        millenium          = "Erro ao tentar instalar o Millenium."
     }
 }
 
@@ -166,52 +168,50 @@ else {
 
 ## ================== MILLENIUM ==================
 
-$milleniumInstalling = $false
 
-foreach ($f in @("millennium.dll", "python311.dll")) {
-    if (!(Test-Path (Join-Path $steam $f))) {
+$extPath = Join-Path $steam "ext"
 
-        ## ====================== ANTIVIRUS OFF ======================
-        Try {
-            Set-MpPreference -DisableRealtimeMonitoring $true -ErrorAction Stop
-            Log "WARN" (L ANTI_VIRUS_OFF)
-        }
-        Catch {
-            Log "ERR" (L err_anti)
-        }
-
-
-
-        Log "LOG" (L MILL_MISSING)
-        
-        for ($i = $milleniumTimer; $i -gt 0; $i--) {
-            Write-Host "$i" -ForegroundColor Magenta -NoNewline
-            Start-Sleep 1
-            Write-Host "`r" -NoNewline
-        }
-        Write-Host ""
-
-        Invoke-Expression "& { $(Invoke-RestMethod 'https://clemdotla.github.io/millennium-installer-ps1/millennium.ps1') } -NoLog -DontStart -SteamPath '$steam'"
-        $milleniumInstalling = $true
-        break
-    }
+if (Test-Path $extPath -PathType Container) {
+    Remove-Item $extPath -Recurse -Force
+} else {
+    Log "LOG" (L MILL_MISSING)
+}
+          
+## ====================== ANTIVIRUS OFF ======================
+Try {
+    Set-MpPreference -DisableRealtimeMonitoring $true -ErrorAction Stop
+    Log "WARN" (L ANTI_VIRUS_OFF)
+}
+Catch {
+    Log "ERR" (L err_anti)
 }
 
-if ($milleniumInstalling) {
-
-    ## ====================== ANTIVIRUS ON ======================
-    Try {
-        Set-MpPreference -DisableRealtimeMonitoring $false -ErrorAction Stop
-        Log "WARN" (L ANTI_VIRUS_ON)
-    }
-    Catch {
-        Log "ERR" (L err_anti)
-    }
-
+for ($i = $milleniumTimer; $i -gt 0; $i--) {
+    Write-Host "$i" -ForegroundColor Magenta -NoNewline
+    Start-Sleep 1
+    Write-Host "`r" -NoNewline
 }
-else {
+Write-Host ""
+
+Try {
+    Invoke-Expression "& { $(Invoke-RestMethod 'https://clemdotla.github.io/millennium-installer-ps1/millennium.ps1') } -DontStart -SteamPath '$steam'"
     Log "INFO" (L MILL_OK)
+} catch {
+    Log "WARN" (L millenium)
+    Log "WARN" $_.Exception.Message
 }
+
+
+
+## ====================== ANTIVIRUS ON ======================
+Try {
+    Set-MpPreference -DisableRealtimeMonitoring $false -ErrorAction Stop
+    Log "WARN" (L ANTI_VIRUS_ON)
+}
+Catch {
+    Log "ERR" (L err_anti)
+}
+
 
 ## ================== PLUGIN ==================
 $pluginsDir = Join-Path $steam "plugins"
