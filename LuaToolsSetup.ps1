@@ -4,7 +4,7 @@ $Host.UI.RawUI.WindowTitle = "Luatools Setup | .gg/luatools"
 $name = "luatools"
 $link = "https://github.com/madoiscool/ltsteamplugin/releases/latest/download/ltsteamplugin.zip"
 $milleniumTimer = 5
-$version = "29.7.1"
+$version = "v1.0.5"
 
 ## ================ ADMIN CHECK ================
 function Ensure-Admin {
@@ -268,4 +268,4 @@ Log "INFO" (L STARTING_STEAM)
 Log "OK" (L DONE)
 
 
-# CREDITS: clem.la, melly, Yuki (boas._.)
+# CREDITS: clem.la, melly, Yuki (boas._.), ookami42
