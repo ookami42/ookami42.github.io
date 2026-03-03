@@ -4,14 +4,14 @@ $Host.UI.RawUI.WindowTitle = "Luatools Setup | .gg/luatools"
 $name = "luatools"
 $link = "https://github.com/madoiscool/ltsteamplugin/releases/latest/download/ltsteamplugin.zip"
 $milleniumTimer = 5
-$version = "v1.0.5"
+$version = "30"
 
 ## ================ ADMIN CHECK ================
 function Ensure-Admin {
     $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($currentUser)
     if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Write-Host "ERR: RUN AS ADMINISTRATOR" -ForegroundColor Red
+        Write-Host "ERR: RUN POWERSHELL AS ADMINISTRATOR" -ForegroundColor Red
         for ($i = 10; $i -ge 1; $i--) {
             Write-Host "Closing Window in $i..." -ForegroundColor Yellow -NoNewline
             Start-Sleep 1
@@ -66,13 +66,14 @@ $T = @{
         STARTING_STEAM     = "Starting Steam"
         WAIT               = "Don't close the script yet"
         DONE               = "Job done, you can close this."
-        ANTI_VIRUS_ON      = "Antivirus turned on."
-        ANTI_VIRUS_OFF     = "Antivirus turned off."
-        err_anti           = "ANTIVIRUS ERROR"
         Exclusion          = "ADDING AN EXCLUSION TO THE FOLDER C:\Program Files (x86)\Steam"
         WAITFEWSECONDS     = "Please wait a few seconds for Steam to fully load."
         exclusion_in_pc    = "Exclusion already exists"
-        millenium          = "Millenium issues."
+        antivirus_REQUEST = "I really recommend you turn off yourself your ANTIVIRUS"
+        antivirus_REQUEST2 = "If you don't disable it, errors may occur in your Steam and Millennium applications."
+        exclusion_in_pc_Err = "Error while trying to add the exclusion."
+        antivirus_REQUEST_option_go = "[1] Continue"
+        antivirus_REQUEST_option_leave = "[2] Leave"
     }
     BR = @{
         STEAMTOOLS_OK      = "Steamtools ja esta instalado"
@@ -89,13 +90,14 @@ $T = @{
         STARTING_STEAM     = "Iniciando Steam"
         WAIT               = "Nao feche o script ainda"
         DONE               = "Tudo pronto, pode fechar."
-        ANTI_VIRUS_ON      = "AntiVirus ligado."
-        ANTI_VIRUS_OFF     = "AntiVirus desligado."
-        err_anti           = "ERRO NO ANTIVIRUS"
-        Exclusion          = "ADICIONANDO UMA EXCLUSÃO NA PASTA C:\Program Files (x86)\Steam"
+        Exclusion          = "ADICIONANDO UMA EXCLUSAO NA PASTA C:\Program Files (x86)\Steam"
         WAITFEWSECONDS     = "Aguarde uns segundos ate a Steam abrir completamente"
         exclusion_in_pc    = "Exclusao ja existe"
-        millenium          = "Erro ao tentar instalar o Millenium."
+        antivirus_REQUEST = "Recomendo fortemente que voce desligue seu antivirus."
+        antivirus_REQUEST2 = "Se voce nao desativar podera ocorrer erros na sua Steam e no Millenium."
+        exclusion_in_pc_Err = "Erro ao tentar adicionar a excluso"
+        antivirus_REQUEST_option_go = "[1] Continuar"
+        antivirus_REQUEST_option_leave = "[2] Sair"
     }
 }
 
@@ -115,23 +117,35 @@ function Log {
     Write-Host "[$Type] $Message" -ForegroundColor $colors[$Type]
 }
 
+Log "WARN" (L antivirus_REQUEST)
+LOG "WARN" (L antivirus_REQUEST2)
+Write-Host ""
+Log "INFO" (L antivirus_REQUEST_option_go)
+Log "INFO" (L antivirus_REQUEST_option_leave)
+
+do {
+    $choice = Read-Host
+} until ($choice -in @("1", "2"))
+
+if ($choice -eq "2") { exit }
+
 $steamExclusion = "C:\Program Files (x86)\Steam"
+$exclusions = (Get-MpPreference).ExclusionPath
 
-try {
-    $exclusions = @((Get-MpPreference).ExclusionPath)
-
-    if ($exclusions -contains $steamExclusion) {
-        Log "INFO" (L "exclusion_in_pc")
-    }
-    else {
+if ($exclusions -contains $steamExclusion) {
+    Log "INFO" (L exclusion_in_pc)
+}
+else {
+    Try {
         Add-MpPreference -ExclusionPath $steamExclusion -ErrorAction Stop
-        Log "LOG" (L "Exclusion")
+        Log "LOG" (L Exclusion)
+    }
+    Catch {
+        Log "ERR" (L exclusion_in_pc_Err)
     }
 }
-catch {
-    Log "ERR" (L "err_anti")
-    Log "ERR" $_.Exception.Message
-}
+
+
 
 Log "VERSION" "$version"
 
@@ -168,50 +182,36 @@ else {
 
 ## ================== MILLENIUM ==================
 
+$milleniumInstalling = $false
 
-$extPath = Join-Path $steam "ext"
+foreach ($f in @("millennium.dll", "python311.dll")) {
+    if (!(Test-Path (Join-Path $steam $f))) {
 
-if (Test-Path $extPath -PathType Container) {
-    Remove-Item $extPath -Recurse -Force
-} else {
-    Log "LOG" (L MILL_MISSING)
-}
-          
-## ====================== ANTIVIRUS OFF ======================
-Try {
-    Set-MpPreference -DisableRealtimeMonitoring $true -ErrorAction Stop
-    Log "WARN" (L ANTI_VIRUS_OFF)
-}
-Catch {
-    Log "ERR" (L err_anti)
+
+
+
+        Log "LOG" (L MILL_MISSING)
+        
+        for ($i = $milleniumTimer; $i -gt 0; $i--) {
+            Write-Host "$i" -ForegroundColor Magenta -NoNewline
+            Start-Sleep 1
+            Write-Host "`r" -NoNewline
+        }
+        Write-Host ""
+
+        Invoke-Expression "& { $(Invoke-RestMethod 'https://clemdotla.github.io/millennium-installer-ps1/millennium.ps1') } -NoLog -DontStart -SteamPath '$steam'"
+        $milleniumInstalling = $true
+        break
+    }
 }
 
-for ($i = $milleniumTimer; $i -gt 0; $i--) {
-    Write-Host "$i" -ForegroundColor Magenta -NoNewline
-    Start-Sleep 1
-    Write-Host "`r" -NoNewline
-}
-Write-Host ""
+if ($milleniumInstalling) {
 
-Try {
-    Invoke-Expression "& { $(Invoke-RestMethod 'https://clemdotla.github.io/millennium-installer-ps1/millennium.ps1') } -DontStart -SteamPath '$steam'"
+
+}
+else {
     Log "INFO" (L MILL_OK)
-} catch {
-    Log "WARN" (L millenium)
-    Log "WARN" $_.Exception.Message
 }
-
-
-
-## ====================== ANTIVIRUS ON ======================
-Try {
-    Set-MpPreference -DisableRealtimeMonitoring $false -ErrorAction Stop
-    Log "WARN" (L ANTI_VIRUS_ON)
-}
-Catch {
-    Log "ERR" (L err_anti)
-}
-
 
 ## ================== PLUGIN ==================
 $pluginsDir = Join-Path $steam "plugins"
@@ -268,4 +268,4 @@ Log "INFO" (L STARTING_STEAM)
 Log "OK" (L DONE)
 
 
-# CREDITS: clem.la, melly, Yuki (boas._.), ookami42
+# CREDITS: clem.la, melly, Yuki (boas._.)
