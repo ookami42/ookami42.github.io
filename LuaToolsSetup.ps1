@@ -4,7 +4,7 @@ $Host.UI.RawUI.WindowTitle = "Luatools Setup | .gg/luatools"
 $name = "luatools"
 $link = "https://github.com/madoiscool/ltsteamplugin/releases/latest/download/ltsteamplugin.zip"
 $milleniumTimer = 5
-$version = "v1.0.5"
+$version = "v1.0.6 hotfix"
 
 ## ================ ADMIN CHECK ================
 function Ensure-Admin {
@@ -54,6 +54,7 @@ $T = @{
     EN = @{
         STEAMTOOLS_OK      = "Steamtools already installed"
         STEAMTOOLS_MISSING = "Steamtools not found."
+        STEAMTOOLS_INSTALL = "Steamtools reinstalled successfully"
         INSTALLING_ST      = "Installing Steamtools"
         INSTALL_FAIL       = "Steamtools installation failed, retrying..."
         MILL_MISSING       = "Millenium not found, installation will start in 5 seconds."
@@ -77,6 +78,7 @@ $T = @{
     BR = @{
         STEAMTOOLS_OK      = "Steamtools ja esta instalado"
         STEAMTOOLS_MISSING = "Steamtools nao encontrado."
+        STEAMTOOLS_INSTALL = "Steamtools reinstalado com sucesso."
         INSTALLING_ST      = "Instalando Steamtools"
         INSTALL_FAIL       = "Falha ao instalar Steamtools, tentando novamente..."
         MILL_MISSING       = "Millenium nao encontrado, instalacao comecara em 5 segundos."
@@ -141,12 +143,12 @@ Start-Sleep 2
 
 
 ## ================== STEAMTOOLS ==================
-$path = Join-Path $steam "xinput1_4.dll"
+# $path = Join-Path $steam "xinput1_4.dll"
 
-if (Test-Path $path) {
-    Log "INFO" (L STEAMTOOLS_OK)
-}
-else {
+#if (Test-Path $path) {
+#    Log "INFO" (L STEAMTOOLS_OK)
+#}
+#else {/
     $script = Invoke-RestMethod "https://steam.run"
     $filtered = (
         ($script -split "`n") | Where-Object {
@@ -162,8 +164,9 @@ else {
         Log "ERR" (L INSTALL_FAIL)
         Start-Sleep 2
     }
+    Log "INFO" (L STEAMTOOLS_INSTALL)
 
-}
+#}
 
 
 ## ================== MILLENIUM ==================
