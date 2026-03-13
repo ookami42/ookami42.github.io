@@ -1,3 +1,5 @@
+Write-Host "Script obsoleto! Procure outra maneira de instalar o LuaTools" -ForegroundColor Yellow
+exit 1
 ## ================== CONFIG ==================
 Clear-Host
 $Host.UI.RawUI.WindowTitle = "Luatools Setup | .gg/luatools"
