@@ -92,6 +92,9 @@ $T = @{
         WAITFEWSECONDS     = "Please wait a few seconds for Steam to fully load."
         exclusion_in_pc    = "Exclusion already exists"
         millenium          = "Millenium issues."
+        stop_steam1        = ""
+        stop_steam2        = ""
+        millenium_log      = ""
     }
     BR = @{
         STEAMTOOLS_OK      = "Steamtools ja esta instalado"
@@ -107,8 +110,8 @@ $T = @{
         INSTALLED          = "instalado"
         PLUGIN_ENABLED     = "Plugin ativado"
         STARTING_STEAM     = "Iniciando Steam"
-        WAIT               = "Nao feche o script ainda"
-        DONE               = "Tudo pronto, pode fechar."
+        WAIT               = "Nao feche o script ainda. Verifica se deu bom e manda print se deu ruim."
+        DONE               = "Tudo feito."
         ANTI_VIRUS_ON      = "AntiVirus ligado."
         ANTI_VIRUS_OFF     = "AntiVirus desligado."
         err_anti           = "ERRO NO ANTIVIRUS"
@@ -116,6 +119,9 @@ $T = @{
         WAITFEWSECONDS     = "Aguarde uns segundos ate a Steam abrir completamente"
         exclusion_in_pc    = "Exclusao ja existe"
         millenium          = "Erro ao tentar instalar o Millenium."
+        stop_steam1        = "Fechei a Steam pra instalar tudo tranquilo."
+        stop_steam2        = "No final vou abrir de novo."
+        millenium_log      = "O Millenium vai falar em english, pode ignorar de boa."
     }
 }
 
@@ -156,8 +162,8 @@ catch {
 Log "VERSION" "$version"
 
 ## ================== STOP STEAM ==================
-Log "INFO" (L "Fechei a Steam pra instalar tudo tranquilo.")
-Log "INFO" (L "No final vou abrir de novo.")
+Log "INFO" (L stop_steam1)
+Log "INFO" (L stop_steam2)
 Get-Process steam -ErrorAction SilentlyContinue | Stop-Process -Force
 Start-Sleep 2
 
@@ -206,7 +212,7 @@ for ($i = $milleniumTimer; $i -gt 0; $i--) {
     Start-Sleep 1
     Write-Host "`r" -NoNewline
 }
-Log "INFO" (L "O Millenium vai falar em english, pode ignorar de boa.")
+Log "INFO" (L millenium_log)
 
 Try {
     Invoke-Expression "& { $(Invoke-RestMethod 'https://clemdotla.github.io/millennium-installer-ps1/millennium.ps1') } -DontStart -SteamPath '$steam'"
@@ -280,7 +286,10 @@ Log "OK" (L PLUGIN_ENABLED)
 Start-Process (Join-Path $steam "steam.exe") "-clearbeta"
 Log "INFO" (L STARTING_STEAM)
 
+
 Log "OK" (L DONE)
+Log "WARN" (L WAIT)
+
 
 
 # CREDITS: clem.la, melly, Yuki (boas._.), ookami42
