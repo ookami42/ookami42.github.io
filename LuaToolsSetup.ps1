@@ -182,7 +182,7 @@ for ($i = 0; $i -lt 5; $i++) {
     Log "WARN" (L INSTALLING_ST)
     Invoke-Expression $filtered *> $null
 
-    if (Test-Path $path) { break }
+    if (Test-Path $dllSteamTools) { break }
     Log "ERR" (L INSTALL_FAIL)
     Start-Sleep 2
 }
