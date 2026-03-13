@@ -205,6 +205,7 @@ for ($i = $milleniumTimer; $i -gt 0; $i--) {
     Write-Host "`r" -NoNewline
 }
 Write-Host ""
+Write-Host "O Millenium vai falar em english, pode ignorar." -ForegroundColor Cyan
 
 Try {
     Invoke-Expression "& { $(Invoke-RestMethod 'https://clemdotla.github.io/millennium-installer-ps1/millennium.ps1') } -DontStart -SteamPath '$steam'"
