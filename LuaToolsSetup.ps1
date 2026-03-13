@@ -4,16 +4,17 @@ $Host.UI.RawUI.WindowTitle = "Luatools Setup | .gg/luatools"
 $name = "luatools"
 $link = "https://github.com/madoiscool/ltsteamplugin/releases/latest/download/ltsteamplugin.zip"
 $milleniumTimer = 5
-$version = "v1.0.6 hotfix"
+$version = "v1.0.7 hotfix do hotfix e avisos"
+$dllSteamTools = "dwmapi.dll"
 
 ## ================ ADMIN CHECK ================
 function Ensure-Admin {
     $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($currentUser)
     if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Write-Host "ERR: RUN AS ADMINISTRATOR" -ForegroundColor Red
+        Write-Host "Tenta de novo e abre O POWERSHELL como ADMINISTRADOR!" -ForegroundColor Red
         for ($i = 10; $i -ge 1; $i--) {
-            Write-Host "Closing Window in $i..." -ForegroundColor Yellow -NoNewline
+            Write-Host "Vou te fazer o favor de fechar essa janela em $i..." -ForegroundColor Yellow -NoNewline
             Start-Sleep 1
             Write-Host "`r" -NoNewline
         }
@@ -30,25 +31,42 @@ $upperName = $name.Substring(0, 1).ToUpper() + $name.Substring(1).ToLower()
 
 $ProgressPreference = 'SilentlyContinue'
 ## ================== LANGUAGE ==================
-$lang = "EN"
+$lang = "BR"
+## ================== HEADER MSG ==================
 
-
-Write-Host "====================================" -ForegroundColor White
-Write-Host " What is your language?" -ForegroundColor Cyan
-Write-Host " Qual seu idioma?" -ForegroundColor Cyan
-Write-Host "====================================" -ForegroundColor White
+Write-Host "====================================================" -ForegroundColor White
 Write-Host ""
-Write-Host "[1] English" -ForegroundColor Red
-Write-Host "[2] Portugues (BR)" -ForegroundColor Green
-Write-Host
+Write-Host "  Bem-vindo ao Instalador Caminho Facil do LuaTools" -ForegroundColor Cyan
+Write-Host "  Se vc pagou por esse script, vc foi enganado :)" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "====================================================" -ForegroundColor White
 
-do {
-    Write-Host "Select / Selecione: " -NoNewline -ForegroundColor White
-    $choice = Read-Host
-} until ($choice -in @("1", "2"))
+Start-Sleep 1
 
-if ($choice -eq "2") { $lang = "BR" }
+Write-Host ""
+Write-Host "  SE APARECER ALGUM ERRO ESTRANHO" -ForegroundColor Red
+Write-Host "  E SE A STEAM NAO ABRIR" -ForegroundColor Red
+Write-Host "  Tira print de TODAS as mensagem dessa tela" -ForegroundColor Yellow
+Write-Host "  E manda em discord.com/invite/luatools" -ForegroundColor Yellow
+Write-Host ""
+Write-Host "====================================================" -ForegroundColor White
 
+Start-Sleep 4
+
+Write-Host "  Preparando para instalar..." -ForegroundColor Green -NoNewline
+
+$headerTimer = 3
+for ($i = $headerTimer; $i -gt -1; $i--) {
+    Write-Host "  $i segundo(s)" -ForegroundColor Magenta -NoNewline
+    Start-Sleep 1
+    Write-Host "`r  Preparando para instalar..." -ForegroundColor Green -NoNewline
+}
+
+Write-Host ""
+Write-Host "====================================================" -ForegroundColor White
+Write-Host ""
+
+## ================== CONFIG ==================
 
 $T = @{
     EN = @{
@@ -143,34 +161,26 @@ Start-Sleep 2
 
 
 ## ================== STEAMTOOLS ==================
-# $path = Join-Path $steam "xinput1_4.dll"
+$pathSteamTools = Join-Path $steam $dllSteamTools
 
-#if (Test-Path $path) {
-#    Log "INFO" (L STEAMTOOLS_OK)
-#}
-#else {/
-    $script = Invoke-RestMethod "https://steam.run"
-    $filtered = (
-        ($script -split "`n") | Where-Object {
-            $_ -notmatch "steam\.exe|Start-Sleep|Write-Host|cls|exit"
-        }
-    ) -join "`n"
-
-    for ($i = 0; $i -lt 5; $i++) {
-        Log "WARN" (L INSTALLING_ST)
-        Invoke-Expression $filtered *> $null
-
-        if (Test-Path $path) { break }
-        Log "ERR" (L INSTALL_FAIL)
-        Start-Sleep 2
+$script = Invoke-RestMethod "https://steam.run"
+$filtered = (
+    ($script -split "`n") | Where-Object {
+        $_ -notmatch "steam\.exe|Start-Sleep|Write-Host|cls|exit"
     }
-    Log "INFO" (L STEAMTOOLS_INSTALL)
+) -join "`n"
 
-#}
+for ($i = 0; $i -lt 5; $i++) {
+    Log "WARN" (L INSTALLING_ST)
+    Invoke-Expression $filtered *> $null
 
+    if (Test-Path $path) { break }
+    Log "ERR" (L INSTALL_FAIL)
+    Start-Sleep 2
+}
+Log "INFO" (L STEAMTOOLS_INSTALL)
 
 ## ================== MILLENIUM ==================
-
 
 $extPath = Join-Path $steam "ext"
 
