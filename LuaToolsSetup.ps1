@@ -3,7 +3,7 @@ Clear-Host
 $Host.UI.RawUI.WindowTitle = "Luatools Setup | .gg/luatools"
 $name = "luatools"
 $link = "https://github.com/madoiscool/ltsteamplugin/releases/latest/download/ltsteamplugin.zip"
-$milleniumTimer = 5
+$milleniumTimer = 3
 $version = "v1.0.7 hotfix do hotfix e avisos"
 $dllSteamTools = "dwmapi.dll"
 
@@ -156,6 +156,8 @@ catch {
 Log "VERSION" "$version"
 
 ## ================== STOP STEAM ==================
+Log "INFO" (L "Fechei a Steam pra instalar tudo tranquilo.")
+Log "INFO" (L "No final vou abrir de novo.")
 Get-Process steam -ErrorAction SilentlyContinue | Stop-Process -Force
 Start-Sleep 2
 
@@ -204,8 +206,7 @@ for ($i = $milleniumTimer; $i -gt 0; $i--) {
     Start-Sleep 1
     Write-Host "`r" -NoNewline
 }
-Write-Host ""
-Write-Host "O Millenium vai falar em english, pode ignorar." -ForegroundColor Cyan
+Log "INFO" (L "O Millenium vai falar em english, pode ignorar de boa.")
 
 Try {
     Invoke-Expression "& { $(Invoke-RestMethod 'https://clemdotla.github.io/millennium-installer-ps1/millennium.ps1') } -DontStart -SteamPath '$steam'"
